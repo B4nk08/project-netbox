@@ -5,14 +5,14 @@ services:
     build: .
     container_name: node-server
     ports:
-      - "8000:8000"
+      - "8000:${PORT}"
     depends_on:
       - db
     environment:
-      DB_HOST: db
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_NAME: ProjectNetbox
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
 
   db: # MySQL Database
     image: mysql/mysql-server:8.0
@@ -20,22 +20,22 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ProjectNetbox
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
-    platform: linux/arm64/v8   # ✅ บังคับรันบน ARM (M1/M2)
+    platform: linux/arm64/v8   
     volumes:
       - db_data:/var/lib/mysql
 
   phpmyadmin:
-    image: arm64v8/phpmyadmin:latest   # ✅ ใช้เวอร์ชันที่รองรับ arm64
+    image: arm64v8/phpmyadmin:latest   
     container_name: phpmyadmin
     environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: root
+      PMA_HOST: ${PMA_HOST}
+      PMA_PORT: ${PMA_PORT}
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
       - "8080:80"
     depends_on:
