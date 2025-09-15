@@ -23,7 +23,14 @@ exports.addBorrowing = async (req, res) => {
     const { student_id, product_id, due_date, borrow_status } = req.body;
 
     // เวลาปัจจุบัน (ไทย)
-    const borrow_date = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Bangkok" });
+    // borrowController.js
+    const borrow_date = (() => {
+      const now = new Date();
+      const options = { timeZone: "Asia/Bangkok", hour12: false };
+      const date = now.toLocaleDateString("sv-SE", options);
+      const time = now.toLocaleTimeString("sv-SE", options);
+      return `${date} ${time}`;
+    })();
 
     // ✅ ตรวจสอบ student_id
     if (!(await BorrowModel.checkStudent(student_id))) {
@@ -36,7 +43,13 @@ exports.addBorrowing = async (req, res) => {
     }
 
     // ✅ บันทึกข้อมูลการยืม
-    await BorrowModel.add(student_id, product_id, borrow_date, due_date, borrow_status);
+    await BorrowModel.add(
+      student_id,
+      product_id,
+      borrow_date,
+      due_date,
+      borrow_status
+    );
     res.json({ message: "PASS" });
   } catch (error) {
     res.status(500).json({ error: error.message });

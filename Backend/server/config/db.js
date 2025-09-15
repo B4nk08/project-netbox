@@ -10,7 +10,8 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT,
   waitForConnections: true,
   connectionLimit: 10,  // จำกัดจำนวน connection ที่เปิดได้
-  queueLimit: 0
+  queueLimit: 0,
+  timezone: "+07:00" 
 });
 
 // ✅ ใช้ทดสอบการเชื่อมต่อ
