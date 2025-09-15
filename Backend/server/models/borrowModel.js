@@ -19,16 +19,16 @@ class BorrowModel {
   // }
   static async getAll() {
     const [rows] = await pool.query(`
-      SELECT 
-        s.student_id,
-        s.full_name AS student_name,
-        b.borrow_date,
-        p.equipment_name,
-        b.borrow_status
-      FROM Borrowings b
-      JOIN Students s ON b.student_id = s.student_id
-      JOIN Stock p ON b.product_id = p.product_id
-    `);
+    SELECT 
+      s.student_id,
+      s.full_name AS student_name,
+      CONVERT_TZ(b.borrow_date, '+00:00', '+07:00') AS borrow_date,
+      p.equipment_name,
+      b.borrow_status
+    FROM Borrowings b
+    JOIN Students s ON b.student_id = s.student_id
+    JOIN Stock p ON b.product_id = p.product_id
+  `);
     return rows;
   }
 
@@ -48,7 +48,6 @@ class BorrowModel {
   static async add(student_id, product_id, borrow_status = "Borrowed") {
     const validStatus = ["Borrowed", "Returned", "Overdue", "Lost"];
     if (!validStatus.includes(borrow_status)) borrow_status = "Borrowed";
-
 
     await pool.query(
       "INSERT INTO Borrowings (student_id, product_id, borrow_status) VALUES (?, ?, ?)",
@@ -71,7 +70,6 @@ class BorrowModel {
     );
     return rows.length > 0;
   }
-
 }
 
-module.exports = {BorrowModel};
+module.exports = { BorrowModel };

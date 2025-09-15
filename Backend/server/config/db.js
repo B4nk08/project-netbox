@@ -1,7 +1,6 @@
 require("dotenv").config();
 const mysql = require("mysql2/promise");
 
-// ✅ สร้าง pool แค่ครั้งเดียว
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -14,11 +13,10 @@ const pool = mysql.createPool({
   timezone: "+07:00" 
 });
 
-// ✅ ใช้ทดสอบการเชื่อมต่อ
 pool.getConnection()
   .then(conn => {
     console.log("Connected to MySQL database (via pool)!");
-    conn.release(); // คืน connection กลับ pool
+    conn.release();
   })
   .catch(err => {
     console.error("Database connection failed:", err.message);
