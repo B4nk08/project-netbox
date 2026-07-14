@@ -44,6 +44,6 @@ exports.deletestock = async (req, res) => {
     await StockModel.deletestock(product_id, quantity);
     res.status(200).json({ message: "Stock updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message }); // ❌ แก้จาก React → res
+    res.status(500).json({ error: error.message });
   }
 };

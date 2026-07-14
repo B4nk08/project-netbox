@@ -22,8 +22,7 @@ exports.addBorrowing = async (req, res) => {
   try {
     const { student_id, product_id, due_date, borrow_status } = req.body;
 
-    // เวลาปัจจุบัน (ไทย)
-    // borrowController.js
+ 
     const borrow_date = (() => {
       const now = new Date();
       const options = { timeZone: "Asia/Bangkok", hour12: false };
@@ -32,17 +31,14 @@ exports.addBorrowing = async (req, res) => {
       return `${date} ${time}`;
     })();
 
-    // ตรวจสอบ student_id
     if (!(await BorrowModel.checkStudent(student_id))) {
       return res.status(400).json({ error: "NOTPASS" });
     }
 
-    // ตรวจสอบ product_id
     if (!(await BorrowModel.checkProduct(product_id))) {
       return res.status(400).json({ error: "product_id ไม่ถูกต้อง" });
     }
 
-    // บันทึกข้อมูลการยืม
     await BorrowModel.add(
       student_id,
       product_id,
